@@ -49,7 +49,7 @@
 
 [ff](http://47.92.67.238:7080/res/docs/story1.md)
 
-[ff  dd](./story1.md)
+[ff  dd](./practice1.md)
 
 ### 3. 面临的挑战
 
