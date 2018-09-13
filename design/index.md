@@ -285,13 +285,70 @@
 
 ### 2. 设备接入规范
 
-暂缺
+> TODO:未完待续
+
+
+
 
 ### 3. 多端能力扩展的标准
 
+> TODO:未完待续
+
 开发人员可以按开发规范快速的开发需要的功能插件，然后使用云端的静默安装能力，推送到指定的设备上，不需要安装，即推即用。
 
-[多端插件开发指南](http://www.baidu.com)
+由于云平台多端插件的特性，插件需要遵循以下规范：
+
+1. 插件引用
+
+	插件 Project  build.gradle 文件中，需要加入如下引用：
+	
+	```
+	classpath 'com.didi.virtualapk:gradle:0.9.0'
+	```
+	
+	> 注：版本号应与宿主版本号相同
+	
+	
+	插件 Module   build.gradle 文件中，需要加入如下引用：
+	
+```
+	apply plugin: 'com.didi.virtualapk.plugin'
+	
+	virtualApk { 
+	     packageId = 0x6f // 插件资源id，避免资源id冲突 
+         targetHost='../host/app'// 宿主工程的路径 
+         applyHostMapping = true // 插件编译时是否启用应用宿主的apply mapping 默认为true
+     }
+
+```
+
+
+2. 构建环境
+
+	构建环境建议：
+
+```
+
+Gradle                   2.14.1
+com.android.tools.build  2.1.3
+```
+
+	即：插件 Project  build.gradle 文件中
+	classpath 'com.android.tools.build:gradle:2.1.3'
+	
+	插件gradle-wrapper.properties文件中：
+	distributionUrl=https\://services.gradle.org/distributions/gradle-2.14.1-all.zip
+	
+	打包
+	插件打包时，应当用命令 ./gradlew clen assemblePlugin 
+	或者 gradle clean assemblePlugin 进行打包
+	输出位置为：app\build\outputs\plugin\release
+	
+	
+	由于插件 Module   build.gradle 文件中设置了如下参数，
+	targetHost='../host/app'// 宿主工程的路径  故，打包时的文件结构应为：  即：HOST 应与插件在同一目录下编译
+
+---
 
 ## 中台支撑服务
 <!--```-->
@@ -351,7 +408,36 @@
 
 ## 最佳实践
 
+###1. 助力云平台新品发布小程序
 
-###1. 友友酷跑实现方案
-###2. 小友投屏解决方案
-###3. 助力云平台发布小程序
+在818云平台新品发布时，为了暖场，希望能做一个小程序助力开幕活动。设计目标是让现场观众都能参与进来，与发布主题进行互动。
+
+基本流程是：
+
+首先，在会场大屏上显示一个二维码。现场观众可以使用自己手机上的微信扫描二维码，加入活动中。会场大屏上同步显示加入的人员。
+
+然后，主持人用遥控器控制开始，会场观众开始摇动手机。云端收集摇动的数据。根据摇动数据，会场大屏上的新产品图片逐步显现。
+
+最后，当摇动数值达到一定程度或摇动时间到达20秒时，新产品图片完全显现，新产品发布，并在摇动手机的观众随时抽取一定数量的奖品。
+
+这是一个典型的多端协同场景。现场有Android手机、iOS手机、投影大屏、云端服务。所有设备要无缝的配合起来才能完成这个有趣的场景。
+
+[现场视频](http://47.92.67.238:7080/res/mtl/p1.mp4)
+
+使用多端协同框架实现助力小程序
+
++ 设备绑定
+
+![设备绑定](http://47.92.67.238:7080/res/mtl/app1-1.jpg)
+
++ 推送消息
+
+![推送消息](http://47.92.67.238:7080/res/mtl/app1-2.jpg)
+
++ 反馈结果
+
+![反馈结果](http://47.92.67.238:7080/res/mtl/app1-3.jpg)
+
+
+###2. 友友酷跑实现方案
+###3. 小友投屏解决方案
